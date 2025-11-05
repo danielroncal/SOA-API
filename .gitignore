@@ -1,0 +1,21 @@
+# Build
+bin/
+obj/
+
+mssql_data/
+
+# User-specific
+.vs/
+*.user
+*.suo
+
+# Configuration
+appsettings.Development.json
+appsettings.Local.json
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store

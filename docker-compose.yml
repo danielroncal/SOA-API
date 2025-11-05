@@ -1,0 +1,39 @@
+﻿services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Admin123@
+    ports:
+      - "5012:1433"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Admin123@ -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /opt/mssql/bin/sqlservr &
+
+        echo "⏳ Esperando que SQL Server inicie..."
+        sleep 20
+
+        echo "⚙️ Instalando herramientas mssql-tools..."
+        apt-get update -y
+        apt-get install -y curl apt-transport-https gnupg
+        curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+        curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+        apt-get update -y
+        ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+
+        echo "✅ mssql-tools instalado."
+        sleep 5
+
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Admin123@ -Q "CREATE DATABASE BD_SOA; ALTER DATABASE BD_SOA SET RECOVERY SIMPLE;"
+        echo "✅ Base de datos BD_SOA creada."
+        tail -f /dev/null
