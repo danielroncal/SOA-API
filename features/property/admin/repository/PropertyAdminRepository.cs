@@ -1,6 +1,5 @@
 ﻿using SOA.features.property.admin.dtos;
 using SOA.features.properties.models;
-using System.Text.RegularExpressions;
 
 namespace SOA.features.property.admin.repository
 {
@@ -13,9 +12,8 @@ namespace SOA.features.property.admin.repository
             _context = context;
         }
 
-        public async Task<Property> CreateAsync(CreatePropertyAdminDto dto, Guid userId, Guid locationId)
+        public async Task<Property> CreateAsync(CreatePropertyAdminDto dto, Guid userId, Guid locationId, String slug)
         {
-            var slug = GenerateSlug(dto.Name);
 
             var property = new Property
             {
@@ -58,13 +56,6 @@ namespace SOA.features.property.admin.repository
             return property;
         }
 
-        private static string GenerateSlug(string text)
-        {
-            text = text.ToLowerInvariant().Trim();
-            text = Regex.Replace(text, @"[^a-z0-9\s-]", "");   
-            text = Regex.Replace(text, @"\s+", "-");           
-            text = Regex.Replace(text, @"-+", "-");            
-            return text;
-        }
+
     }
 }
