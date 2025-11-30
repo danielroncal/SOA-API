@@ -21,26 +21,26 @@ namespace SOA.features.auth.controllers
             _userContext = userContext;
         }
 
-        [HttpPost("login")]
-        public async Task<ResponseAuth> Login([FromBody] LoginUserDto dto)
-        {
-            return await _authService.LoginAsync(dto); ;
-        }
+        [HttpPost("Iniciodesesion")]
+            public async Task<ResponseAuth> Login([FromBody] LoginUserDto dto)
+            {
+                return await _authService.LoginAsync(dto); ;
+            }
 
-        [HttpPost("confirm-account")]
-        public async Task<ResponseAuth> ConfirmAccount([FromBody] ConfirmAccountDto dto)
-        {
-            return await _authService.ConfirmAccountAsync(dto); ;
-        }
+            [HttpPost("Confirmarcuenta")]
+            public async Task<ResponseAuth> ConfirmAccount([FromBody] ConfirmAccountDto dto)
+            {
+                return await _authService.ConfirmAccountAsync(dto); ;
+            }
 
-        [HttpPost("create-account")]
+        [HttpPost("Crearcuenta")]
         public async Task<ResponseAuth> RegisterUser([FromBody] CreateUserDto dto)
         {
            return await _authService.CreateUserAsync(dto);
         }
 
         [Authorize]
-        [HttpGet("info-account")]
+        [HttpGet("Listadelacuenta")]
         public async Task<IActionResult> InfoAccount()
         {
             var result = await _userContext.GetAsyncUser();

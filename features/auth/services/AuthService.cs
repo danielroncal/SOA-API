@@ -50,6 +50,7 @@ namespace SOA.features.auth.services
             return new ResponseAuth
             {
                 Message = "Cuenta creada exitosamente, revisa tu correo para confirmar tu cuenta",
+ 
                 Info = userInfo
             };
         }
@@ -71,6 +72,7 @@ namespace SOA.features.auth.services
             return new ResponseAuth
             {
                 Message = "Inicio de sesión exitoso",
+                Token = token,
                 Info = userInfo
             };
         }

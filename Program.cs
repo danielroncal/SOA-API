@@ -21,13 +21,27 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WEBAPI", policy =>
+    {
+        policy.WithOrigins("https://localhost:7080")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();   // 👈 NECESARIO PARA JWT EN COOKIES
+    });
+});
+
 builder.Services.AddControllers()
+
     .AddJsonOptions(opt =>
     {
         opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         opt.JsonSerializerOptions.WriteIndented = true;
         opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
     });
+    
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -99,6 +113,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
+
+
+// *** ACTIVAR CORS ANTES DE AUTH ***
+app.UseCors("WEBAPI");  
+
 app.UseAuthentication();
 app.UseAuthorization();
 
